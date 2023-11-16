@@ -24,7 +24,7 @@
 
 
     <div class="container">
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-md-6 offset-md-3">
                 <div class="filter-section">
                     <label for="rankingFilter">Filter by Ranking:</label>
@@ -37,7 +37,14 @@
 
                 </div>
             </div>
-        </div>
+        </div> -->
+
+        <form method="get" action="{% url 'filter_view' filter_by=form.ranking_filter.value %}">
+            {% csrf_token %}
+            {{ form.ranking_filter }}
+            <button type="submit" class="btn btn-primary mt-2">Filter</button>
+        </form>
+
 
 
 
