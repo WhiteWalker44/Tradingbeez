@@ -3,6 +3,7 @@ from django.views import View
 import requests
 import json
 from .forms import RankingFilterForm
+
 # Create your views here.
 
 
@@ -30,7 +31,6 @@ from .forms import RankingFilterForm
 #         page_number = 1
 
 
-
 #         if filter_by is not None:
 #             limit_per_page = 10
 #             if filter_by == "top":
@@ -43,7 +43,7 @@ from .forms import RankingFilterForm
 #                     "limit": limit_per_page,
 #                     "offset": (11 - 1) * limit_per_page,
 #                 }
-            
+
 
 #         response = requests.get(f"{api_url}/{endpoint}", params=params)
 #         data = response.json()
@@ -57,8 +57,6 @@ from .forms import RankingFilterForm
 #         return render(request, "crypto.html", context=context)
 
 
-
-
 class CryptoView(View):
     def get(self, request, filter_by=None):
         form = RankingFilterForm(request.GET)
@@ -68,8 +66,8 @@ class CryptoView(View):
         params = {}
         page_number = 1
 
-        print(form,"===========>>>>>>>>>")
-        
+        # print(form,"===========>>>>>>>>>")
+
         if filter_by is not None:
             limit_per_page = 10
             if filter_by == "top":
@@ -86,6 +84,7 @@ class CryptoView(View):
         response = requests.get(f"{api_url}/{endpoint}", params=params)
         data = response.json()
 
+        print("\n\n", data, "\n\n")
         context = {
             "data": data,
             "page_number": page_number,
@@ -93,6 +92,31 @@ class CryptoView(View):
         }
         return render(request, "crypto.html", context=context)
 
+
 class PaginnationView(View):
     def get(self, request):
         data = request.get("data")
+
+
+class ExchangeView(View):
+    def get(self, request, symbol, fiat_currency, fiat_value):
+        print(symbol, "========SYMBOL")
+        print(fiat_currency, "========SYMBOL")
+        print(fiat_value, "========SYMBOL")
+
+        context = {
+            "symbol": symbol,
+            "fiat_currency": fiat_currency,
+            "fiat_value": fiat_value
+        }
+        return render(request, "exchange.html", context=context)
+
+
+class FloatUrlParameterConverter:
+    regex = "[0-9]+\.?[0-9]+"
+
+    def to_python(self, value):
+        return float(value)
+
+    def to_url(self, value):
+        return str(value)
